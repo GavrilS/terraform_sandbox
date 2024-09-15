@@ -2,13 +2,6 @@ provider "local" {}
 
 provider "template" {}
 
-locals {
-    template_files = toset([
-        "greeting.txt",
-        "farewell.txt"
-    ])
-}
-
 resource "local_file" "test" {
   for_each = local.template_files
   content  = template_file.greeting[each.key].rendered
@@ -26,4 +19,7 @@ resource "template_file" "greeting" {
   vars = {
     name = "John Doe"
   }
+  #depends_on = [
+  #  local_file.test
+  #]
 }
