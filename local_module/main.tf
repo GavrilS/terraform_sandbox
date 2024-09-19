@@ -23,3 +23,17 @@ resource "template_file" "greeting" {
   #  local_file.test
   #]
 }
+
+resource "template_file" "test" {
+  for_each = local.main_resource_test
+  template = each.content
+  vars = {
+    arg = each.code
+  }
+}
+
+resource "local_file" "test_output" {
+  for_each = template_file.test
+  content  = each.rendered
+  filename = "local_resources/${each.code}"
+}
