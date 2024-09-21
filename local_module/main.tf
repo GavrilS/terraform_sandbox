@@ -24,16 +24,16 @@ resource "template_file" "greeting" {
   #]
 }
 
-resource "template_file" "test" {
+data "template_file" "test_with_loop" {
   for_each = local.main_resource_test
-  template = each.content
+  template = each.value.content
   vars = {
-    arg = each.code
+    data = each.value.code
   }
 }
 
 resource "local_file" "test_output" {
-  for_each = template_file.test
-  content  = each.rendered
-  filename = "local_resources/${each.code}"
+  for_each = data.template_file.test_with_loop
+  content  = each.value.rendered
+  filename = "local_resources/${each.key}.txt"
 }
